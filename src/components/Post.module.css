@@ -1,0 +1,9 @@
+.Post {
+  width: 70%;
+  margin-bottom: 100px;
+}
+
+.Title {
+  text-decoration: underline;
+  color: rgb(27, 114, 71);
+}
