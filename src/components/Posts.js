@@ -14,11 +14,19 @@ const ALL_POSTS = gql`
   }
 `;
 
+const convertDate = (date) => {
+  return new Date(parseInt(date)).toLocaleString();
+};
+
 const Posts = () => {
   const { loading, error, data } = useQuery(ALL_POSTS);
 
   if (loading) return <p>Wait for it...</p>;
   if (error) return <p>Something went wrong. Try again please.</p>;
+
+  const date = data.allPosts.createdAt;
+  const formatedDate = new Date(date);
+  console.log(date);
 
   return (
     <div className={classes.Posts}>
@@ -26,7 +34,7 @@ const Posts = () => {
         <Post
           key={post.id}
           title={post.title}
-          date={new Date(post.createdAt)}
+          date={convertDate(post.createdAt)}
         />
       ))}
     </div>
