@@ -6,4 +6,5 @@
 .Title {
   text-decoration: underline;
   color: rgb(27, 114, 71);
+  text-transform: uppercase;
 }
