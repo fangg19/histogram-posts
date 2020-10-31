@@ -7,7 +7,7 @@ import { useQuery, gql } from '@apollo/client';
 
 const ALL_POSTS = gql`
   {
-    allPosts(count: 12) {
+    allPosts(count: 100) {
       id
       title
       createdAt
@@ -45,7 +45,6 @@ const Posts = (props) => {
     } else {
       acc[curr] += 1;
     }
-
     return acc;
   }, {});
 
@@ -54,7 +53,7 @@ const Posts = (props) => {
   return (
     <div className={classes.Posts}>
       <button>Show Histogram</button>
-      <Histogram data={months} />
+      <Histogram data={monthsFreq} />
       {data.allPosts.map((post) => (
         <Post
           key={post.id}

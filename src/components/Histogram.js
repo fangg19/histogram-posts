@@ -4,50 +4,50 @@ import { Group } from '@visx/group';
 import { Bar } from '@visx/shape';
 import { scaleLinear, scaleBand } from '@visx/scale';
 import { AxisLeft, AxisBottom } from '@visx/axis';
+import { extent, max } from 'd3-array';
 
-const data = letterFrequency;
-console.log(data);
-
-// Define the graph dimensions and margins
 const width = 800;
 const height = 500;
 const margin = { top: 20, bottom: 20, left: 20, right: 20 };
 
-// Then we'll create some bounds
 const xMax = width - margin.left - margin.right;
 const yMax = height - margin.top - margin.bottom;
 
-// We'll make some helpers to get at the data we want
-const x = (d) => d.letter;
-const y = (d) => +d.frequency * 100;
-
-// And then scale the graph by our data
-const xScale = scaleBand({
-  range: [0, xMax],
-  round: true,
-  domain: data.map(x),
-  padding: 0.4,
-});
-const yScale = scaleLinear({
-  range: [yMax, 0],
-  round: true,
-  domain: [0, Math.max(...data.map(y))],
-});
-
-// Compose together the scale and accessor functions to get point functions
-const compose = (scale, accessor) => (data) => scale(accessor(data));
-const xPoint = compose(xScale, x);
-const yPoint = compose(yScale, y);
-
-// Finally we'll embed it all in an SVG
 function Histogram(props) {
+  const data = props.data;
+  console.log(data);
+
+  const x = (data) => Object.keys(data);
+  const y = (data) => Object.values(data);
+
+  // And then scale the graph by our data
+  const xScale = scaleBand({
+    range: [0, xMax],
+    round: true,
+    domain: Object.keys(data),
+    padding: 0.6,
+  });
+
+  const yScale = scaleLinear({
+    range: [yMax, 0],
+    round: true,
+    domain: [0, Math.max(...Object.values(data).map(y))],
+  });
+  console.log(Object.values(data));
+
+  // Compose together the scale and accessor functions to get point functions
+  const compose = (scale, accessor) => (data) =>
+    scale(accessor(Object.keys(data)));
+  const xPoint = compose(xScale, x);
+  const yPoint = compose(yScale, y);
+
   console.log(props);
   return (
     <svg width={width} height={height}>
-      {props.data.map((month, i) => {
+      {Object.values(data).map((month, index) => {
         const barHeight = yMax - yPoint(month);
         return (
-          <Group key={`bar-${i}`}>
+          <Group key={`bar-${index}`}>
             <AxisLeft
               scale={yScale}
               top={0}
@@ -64,11 +64,11 @@ function Histogram(props) {
               tickTextFill={'#1b1a1e'}
             />
             <Bar
-              x={xPoint(month)}
+              x={xPoint(Object.values(data))}
               y={yMax - barHeight}
               height={barHeight}
               width={xScale.bandwidth()}
-              fill="#fc2e1c"
+              fill="#1B7247"
             />
           </Group>
         );
